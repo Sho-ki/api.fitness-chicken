@@ -18,7 +18,7 @@ router.use(cors());
 
 router.post("/signIn", controller.signIn);
 
-// router.post("/login", controller.login);
+router.post("/login", controller.login);
 
 // router.get("/quiz-api", controller.listQuizes);
 
