@@ -20,11 +20,11 @@ router.post("/signIn", controller.signIn);
 
 router.post("/login", controller.login);
 
+router.post("/workout-api", controller.createWorkout);
+
 // router.get("/quiz-api", controller.listQuizes);
 
 // router.get("/quiz-api/:id", controller.getQuiz);
-
-// router.post("/quiz-api", controller.createQuiz);
 
 // router.put("/quiz-api/:id", controller.updateQuiz);
 
