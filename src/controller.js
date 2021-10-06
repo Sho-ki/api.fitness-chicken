@@ -34,24 +34,32 @@ module.exports = {
       const name = req.body.name;
       const sets = req.body.sets;
       const times = req.body.times;
+
       const userWorkoutsId = await WorkoutModel.createUserWorkouts(day, userId);
 
       const workoutCategoryId = await WorkoutModel.createWorkoutCategory(
         category
       );
 
-      const workoutSetResult = await WorkoutModel.createWorkoutSet(
+      const workoutSetResult = await WorkoutModel.createWorkoutSet({
         name,
         sets,
         times,
-        userWorkoutsId,
         workoutCategoryId,
-        userId
-      );
+        userWorkoutsId,
+        userId,
+      });
 
       res.status(200).json(workoutSetResult);
     } catch (e) {
       res.status(500).send({ e });
     }
+  },
+
+  updateSchedule: async (req, res) => {
+    const newDay = req.body.day ? req.body.day : null;
+    const userId = req.body.id;
+
+    const result = await WorkoutModel.updateSchedule(newDay, userId);
   },
 };
