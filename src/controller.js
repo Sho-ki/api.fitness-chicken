@@ -125,38 +125,24 @@ module.exports = {
 };
 
 function createSchedule(resultGetAllUserInfo, weekSchedule) {
-  resultGetAllUserInfo.map((el) => {
-    if (el.scheduled_day === "Sun") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Sun[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Mon") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Mon[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Tue") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Tue[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Wed") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Wed[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Thu") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Thu[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Fri") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Fri[elOrderNum] = el;
-    }
-    if (el.scheduled_day === "Sat") {
-      const elOrderNum = el.order_index;
-      weekSchedule.Sat[elOrderNum] = el;
-    }
-    if (el.scheduled_day === null) {
-      const elOrderNum = el.order_index;
-      weekSchedule.uncategorized[elOrderNum] = el;
+  resultGetAllUserInfo.map((rgaui) => {
+    switch (rgaui.scheduled_day) {
+      case "Sun":
+        return (weekSchedule.Sun[rgaui.order_index] = rgaui);
+      case "Mon":
+        return (weekSchedule.Mon[rgaui.order_index] = rgaui);
+      case "Tue":
+        return (weekSchedule.Tue[rgaui.order_index] = rgaui);
+      case "Wed":
+        return (weekSchedule.Wed[rgaui.order_index] = rgaui);
+      case "Thu":
+        return (weekSchedule.Thu[rgaui.order_index] = rgaui);
+      case "Fri":
+        return (weekSchedule.Fri[rgaui.order_index] = rgaui);
+      case "Sat":
+        return (weekSchedule.Sat[rgaui.order_index] = rgaui);
+      case null:
+        return (weekSchedule.uncategorized[rgaui.order_index] = rgaui);
     }
   });
   return weekSchedule;
