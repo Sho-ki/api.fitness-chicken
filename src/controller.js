@@ -116,7 +116,7 @@ module.exports = {
         uncategorized: {},
       };
 
-      weekSchedule = createHisSchedule(resultGetUserScheduleInfo, weekSchedule);
+      weekSchedule = createSchedule(resultGetUserScheduleInfo, weekSchedule);
       res.status(200).json(weekSchedule);
     } catch (e) {
       res.status(500).send({ e });
@@ -124,7 +124,7 @@ module.exports = {
   },
 };
 
-function createHisSchedule(resultGetAllUserInfo, weekSchedule) {
+function createSchedule(resultGetAllUserInfo, weekSchedule) {
   resultGetAllUserInfo.map((el) => {
     if (el.scheduled_day === "Sun") {
       const elOrderNum = el.order_index;
