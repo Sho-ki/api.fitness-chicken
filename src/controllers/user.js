@@ -44,7 +44,7 @@ function createSchedule(resultGetAllUserInfo, weekSchedule) {
         return (weekSchedule.Fri[rgaui.order_index] = rgaui);
       case "Sat":
         return (weekSchedule.Sat[rgaui.order_index] = rgaui);
-      case null:
+      default:
         return (weekSchedule.uncategorized[rgaui.order_index] = rgaui);
     }
   });
