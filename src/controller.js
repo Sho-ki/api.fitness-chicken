@@ -59,17 +59,51 @@ module.exports = {
     }
   },
 
-  updateSchedule: async (req, res) => {
-    const newDay = req.body.day ? req.body.day : null;
-    const userId = req.body.id;
+  updateWorkout: async (req, res) => {
+    try {
+      const newDay = req.body.day ? req.body.day : null;
+      const workoutId = req.params.workoutId;
+      const userId = req.body.id;
+      const category = req.body.category;
+      const name = req.body.name;
+      const sets = req.body.sets;
+      const times = req.body.times;
 
-    const result = await WorkoutModel.updateSchedule(newDay, userId);
+      const isDayChanged = req.body.isDayChanged;
+
+      if (isDayChanged) {
+        const resultUpdateWorkoutWithDayChange =
+          await WorkoutModel.updateWorkoutWithDayChange({
+            newDay,
+            workoutId,
+            userId,
+            category,
+            name,
+            sets,
+            times,
+          });
+        return res.status(200).json(resultUpdateWorkoutWithDayChange);
+      } else {
+        const resultUpdateWorkout = await WorkoutModel.updateWorkout({
+          workoutId,
+          category,
+          name,
+          sets,
+          times,
+        });
+        return res.status(200).json(resultUpdateWorkout);
+      }
+    } catch (e) {
+      res.status(500).send({ e });
+    }
   },
 
-  getAllUserInfo: async (req, res) => {
+  getUserScheduleInfo: async (req, res) => {
     try {
       const userId = req.params.id;
-      const resultGetAllUserInfo = await WorkoutModel.getAllUserInfo(userId);
+      const resultGetUserScheduleInfo = await WorkoutModel.getUserScheduleInfo(
+        userId
+      );
 
       let weekSchedule = {
         Sun: {},
@@ -82,7 +116,7 @@ module.exports = {
         uncategorized: {},
       };
 
-      weekSchedule = createHisSchedule(resultGetAllUserInfo, weekSchedule);
+      weekSchedule = createHisSchedule(resultGetUserScheduleInfo, weekSchedule);
       res.status(200).json(weekSchedule);
     } catch (e) {
       res.status(500).send({ e });
