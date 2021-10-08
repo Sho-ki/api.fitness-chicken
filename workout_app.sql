@@ -74,7 +74,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `workout_app`.`workout_sets`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `workout_app`.`workout_sets` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `training_name` VARCHAR(45) NOT NULL,
   `sets` INT NOT NULL,
   `times` INT NOT NULL,
