@@ -6,15 +6,13 @@ const WorkoutModel = {
   signIn: async (username, password) => {
     try {
       const hashed_password = bcrypt.hashSync(password, 10);
-      console.log(
-        `INSERT INTO user (username, password) VALUES ('${username}', '${hashed_password}')`
-      );
+
       const resultSignIn = await util
         .promisify(connection.execute)
         .bind(connection)(
         `INSERT INTO user (username, password) VALUES ('${username}', '${hashed_password}')`
       );
-      console.log(resultSignIn);
+
       return resultSignIn;
     } catch (e) {
       throw new Error(e);
