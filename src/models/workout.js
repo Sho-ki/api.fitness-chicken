@@ -1,5 +1,5 @@
-const util = require("util");
-const connection = require("../db");
+const util = require('util');
+const connection = require('../db');
 
 const WorkoutModel = {
   createUserWorkouts: async (dayOfWeek, userId) => {
@@ -12,7 +12,7 @@ const WorkoutModel = {
       }
 
       const resultCreateUserWorkouts = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(queryState);
 
       return resultCreateUserWorkouts.insertId;
@@ -24,7 +24,7 @@ const WorkoutModel = {
   createWorkoutCategory: async (category, userId) => {
     try {
       const resultCreateWorkoutCategory = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(
         `INSERT INTO workout_categories (label, user_id)SELECT * FROM (SELECT '${category}', ${userId})as tmp WHERE NOT EXISTS (SELECT * FROM workout_categories WHERE user_id=${userId} and label='${category}');
           `
@@ -32,7 +32,7 @@ const WorkoutModel = {
 
       if (resultCreateWorkoutCategory.insertId === 0) {
         const getExistingCategoryId = await util
-          .promisify(connection.execute)
+          .promisify(connection.query)
           .bind(connection)(
           `SELECT id FROM workout_categories WHERE user_id=${userId} and label='${category}'`
         );
@@ -56,7 +56,7 @@ const WorkoutModel = {
   }) => {
     try {
       const resultCreateWorkoutSet = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(
         `INSERT INTO workout_sets(training_name, sets, times, order_index,workout_categories_id, user_workouts_id,user_workouts_user_id) VALUES(?,?,?,?,?,?,?)`,
         [
@@ -85,7 +85,7 @@ const WorkoutModel = {
   }) => {
     try {
       let maxOrderIndex = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(
         `SELECT max(order_index) as maxOrderIndex FROM workout_sets 
         LEFT JOIN user_workouts ON user_workouts.id = user_workouts_id 
@@ -96,7 +96,7 @@ const WorkoutModel = {
         : 0;
 
       const resultUpdateWorkoutWithDayChange = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(
         `UPDATE workout_sets
         LEFT JOIN workout_categories as WC ON WC.id=workout_categories_id 
@@ -115,7 +115,7 @@ const WorkoutModel = {
   updateWorkout: async ({ workoutId, category, name, sets, times }) => {
     try {
       const resultUpdateWorkout = await util
-        .promisify(connection.execute)
+        .promisify(connection.query)
         .bind(connection)(`UPDATE workout_sets
       LEFT JOIN workout_categories as WC ON WC.id=workout_categories_id 
       SET training_name='${name}', sets=${sets}, times=${times}, label='${category}'
