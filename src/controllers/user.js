@@ -1,4 +1,4 @@
-const UserModel = require("../models/user");
+const UserModel = require('../models/user');
 
 module.exports = {
   getUserScheduleInfo: async (req, res) => {
@@ -20,7 +20,7 @@ module.exports = {
       };
 
       weekSchedule = createSchedule(resultGetUserScheduleInfo, weekSchedule);
-      res.status(200).json(weekSchedule);
+      res.status(200).json({ weekSchedule });
     } catch (e) {
       res.status(500).send({ e });
     }
@@ -30,19 +30,19 @@ module.exports = {
 function createSchedule(resultGetAllUserInfo, weekSchedule) {
   resultGetAllUserInfo.map((rgaui) => {
     switch (rgaui.scheduled_day) {
-      case "Sun":
+      case 'Sun':
         return (weekSchedule.Sun[rgaui.order_index] = rgaui);
-      case "Mon":
+      case 'Mon':
         return (weekSchedule.Mon[rgaui.order_index] = rgaui);
-      case "Tue":
+      case 'Tue':
         return (weekSchedule.Tue[rgaui.order_index] = rgaui);
-      case "Wed":
+      case 'Wed':
         return (weekSchedule.Wed[rgaui.order_index] = rgaui);
-      case "Thu":
+      case 'Thu':
         return (weekSchedule.Thu[rgaui.order_index] = rgaui);
-      case "Fri":
+      case 'Fri':
         return (weekSchedule.Fri[rgaui.order_index] = rgaui);
-      case "Sat":
+      case 'Sat':
         return (weekSchedule.Sat[rgaui.order_index] = rgaui);
       default:
         return (weekSchedule.uncategorized[rgaui.order_index] = rgaui);

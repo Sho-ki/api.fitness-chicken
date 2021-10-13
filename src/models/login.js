@@ -6,14 +6,12 @@ const LoginModel = {
   signUp: async (username, password) => {
     try {
       const hashed_password = bcrypt.hashSync(password, 10);
-      console.log('hashed_password', hashed_password);
 
       const resultSignUp = await util
         .promisify(connection.query)
         .bind(connection)(
         `INSERT INTO user (username, password) VALUES ('${username}', '${hashed_password}')`
       );
-      console.log('resultSignUp', resultSignUp);
       return resultSignUp;
     } catch (e) {
       throw new Error(e);
