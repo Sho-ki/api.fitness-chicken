@@ -1,4 +1,4 @@
-const WorkoutModel = require("../models/workout");
+const WorkoutModel = require('../models/workout');
 
 module.exports = {
   createWorkout: async (req, res) => {
@@ -31,7 +31,7 @@ module.exports = {
         userId,
       });
 
-      res.status(200).json(resultWorkoutSet);
+      res.status(200).json({ resultWorkoutSet });
     } catch (e) {
       res.status(500).send({ e });
     }
@@ -59,7 +59,7 @@ module.exports = {
             sets,
             times,
           });
-        return res.status(200).json(resultUpdateWorkoutWithDayChange);
+        return res.status(200).json({ resultUpdateWorkoutWithDayChange });
       } else {
         const resultUpdateWorkout = await WorkoutModel.updateWorkout({
           workoutId,
@@ -68,7 +68,7 @@ module.exports = {
           sets,
           times,
         });
-        return res.status(200).json(resultUpdateWorkout);
+        return res.status(200).json({ resultUpdateWorkout });
       }
     } catch (e) {
       res.status(500).send({ e });
