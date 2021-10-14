@@ -1,10 +1,10 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const loginController = require("./controllers/login");
-const workoutController = require("./controllers/workout");
-const userController = require("./controllers/user");
+const express = require('express');
+const bodyParser = require('body-parser');
+const loginController = require('./controllers/login');
+const workoutController = require('./controllers/workout');
+const userController = require('./controllers/user');
 
-const cors = require("cors");
+const cors = require('cors');
 
 const router = express.Router();
 
@@ -19,15 +19,15 @@ router.use(cors());
 
 // HTTP Methods
 
-router.post("/signUp", loginController.signUp);
+router.post('/signUp', loginController.signUp);
 
-router.post("/signIn", loginController.signIn);
+router.post('/signIn', loginController.signIn);
 
-router.post("/api/workouts", workoutController.createWorkout);
+router.post('/api/workouts', workoutController.createWorkout);
 
-router.put("/api/workouts/:workoutId", workoutController.updateWorkout);
+router.put('/api/workouts/:workoutId', workoutController.updateWorkout);
 
-router.get("/api/workouts/:id", userController.getUserScheduleInfo);
+router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
 
 // router.get("/quiz-api/:id", controller.getQuiz);
 

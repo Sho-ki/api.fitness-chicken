@@ -3,14 +3,14 @@ const bcrypt = require('bcrypt');
 const connection = require('../db');
 
 const LoginModel = {
-  signUp: async (username, password) => {
+  signUp: async (email, password) => {
     try {
       const hashed_password = bcrypt.hashSync(password, 10);
 
       const resultSignUp = await util
         .promisify(connection.query)
         .bind(connection)(
-        `INSERT INTO user (username, password) VALUES ('${username}', '${hashed_password}')`
+        `INSERT INTO user (email, password) VALUES ('${email}', '${hashed_password}')`
       );
       return resultSignUp;
     } catch (e) {
@@ -18,21 +18,21 @@ const LoginModel = {
     }
   },
 
-  signIn: async (username, password) => {
+  signIn: async (email, password) => {
     try {
-      const resultFindUsername = await util
+      const resultFindEmail = await util
         .promisify(connection.query)
-        .bind(connection)(`SELECT * FROM user WHERE username = '${username}'`);
-      if (resultFindUsername.length <= 0) {
+        .bind(connection)(`SELECT * FROM user WHERE email = '${email}'`);
+      if (resultFindEmail.length <= 0) {
         return 'NO USERS FOUND';
       }
 
       const isValidPass = await bcrypt.compare(
         password,
-        resultFindUsername[0].password
+        resultFindEmail[0].password
       );
 
-      return { id: resultFindUsername[0].id, isValidLogin: isValidPass };
+      return { id: resultFindEmail[0].id, isValidLogin: isValidPass };
     } catch (e) {
       throw new Error(e);
     }

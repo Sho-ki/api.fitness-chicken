@@ -3,10 +3,10 @@ const LoginModel = require('../models/login');
 module.exports = {
   signUp: async (req, res) => {
     try {
-      const username = req.body.username;
+      const email = req.body.email;
       const password = req.body.password;
 
-      const result = await LoginModel.signUp(username, password);
+      const result = await LoginModel.signUp(email, password);
 
       res.status(201).json({ result });
     } catch (e) {
@@ -16,10 +16,10 @@ module.exports = {
 
   signIn: async (req, res) => {
     try {
-      const username = req.body.username;
+      const email = req.body.email;
       const password = req.body.password;
 
-      const result = await LoginModel.signIn(username, password);
+      const result = await LoginModel.signIn(email, password);
 
       if (result === 'NO USERS FOUND') {
         res.status(400).json({ result });
