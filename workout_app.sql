@@ -6,10 +6,10 @@ USE `workout_app` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `workout_app`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(120) NOT NULL,
   `password` VARCHAR(245) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC))
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
