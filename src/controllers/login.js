@@ -22,7 +22,7 @@ module.exports = {
       const result = await LoginModel.signIn(email, password);
 
       if (result === 'NO USERS FOUND') {
-        res.status(400).json({ result });
+        res.status(400).json({ errorMessage: 'NO USERS FOUND' });
       } else {
         res.status(200).json({ result });
       }
