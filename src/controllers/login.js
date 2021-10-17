@@ -6,11 +6,10 @@ module.exports = {
       const email = req.body.email;
       const password = req.body.password;
 
-      const result = await LoginModel.signUp(email, password);
-
-      res.status(201).json({ result });
+      await LoginModel.signUp(email, password);
+      res.status(201).json({ message: 'Successfully created' });
     } catch (e) {
-      res.status(500).json({ errorMessage: 'Duplicate error' });
+      res.status(500).json({ message: e.message });
     }
   },
 
@@ -21,13 +20,9 @@ module.exports = {
 
       const result = await LoginModel.signIn(email, password);
 
-      if (result === 'NO USERS FOUND') {
-        res.status(400).json({ errorMessage: 'NO USERS FOUND' });
-      } else {
-        res.status(200).json({ result });
-      }
+      res.status(200).json({ message: 'Sign in successfully', result });
     } catch (e) {
-      res.status(500).send({ e });
+      res.status(500).send({ message: 'Wrong email or password' });
     }
   },
 };
