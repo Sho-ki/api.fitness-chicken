@@ -11,7 +11,6 @@ const LoginModel = {
   signUp: async (email, password) => {
     try {
       const hashed_password = hashPass(password);
-      console.log(email, password, hashed_password);
       const resultSignUp = await util
         .promisify(connection.query)
         .bind(connection)(`INSERT INTO users (email, password) VALUES (?,?)`, [
