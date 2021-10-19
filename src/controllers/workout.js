@@ -77,6 +77,7 @@ module.exports = {
   //   }
   // },
 
+  // /api/category/:userId
   updateWorkoutCategory: async (req, res) => {
     try {
       const userId = req.params.userId;
@@ -94,7 +95,7 @@ module.exports = {
     }
   },
 
-  // /api/workout/
+  // /api/workouts/:userId
   createWorkoutItem: async (req, res) => {
     try {
       const userId = req.params.userId;
@@ -111,13 +112,6 @@ module.exports = {
         res.status(200).json({ message: 'The workout item already exists' });
         return;
       }
-      await WorkoutModel.createWorkoutSet({ userId });
-
-      // const resultWorkoutSetItem =
-      //   await WorkoutModel.createOriginalWorkoutSetItem({
-      //     workoutItemId,
-      //     workoutSetsId,
-      //   });
 
       res.status(201).json({ message: 'Successfully workout item created' });
       return;

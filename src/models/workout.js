@@ -122,6 +122,8 @@ const WorkoutModel = {
   //     throw new Error(e);
   //   }
   // },
+
+  // /api/category/:userId
   updateWorkoutCategory: async ({ color, userId }) => {
     try {
       await util.promisify(connection.query).bind(connection)(
@@ -157,6 +159,8 @@ const WorkoutModel = {
       throw new Error(e);
     }
   },
+
+  // /api/workouts/:userId
   createWorkoutItem: async ({ userId, category, name }) => {
     try {
       const categoryId = await util
