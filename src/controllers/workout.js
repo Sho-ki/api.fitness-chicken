@@ -76,32 +76,50 @@ module.exports = {
   //     res.status(500).send({ e });
   //   }
   // },
-  createOriginalWorkout: async (req, res) => {
-    try {
-      const userId = req.body.userId;
-      const category = req.body.category;
-      const color = req.body.color;
-      const name = req.body.name;
 
-      const workoutCategoryId = await WorkoutModel.createWorkoutCategory({
-        category,
+  updateWorkoutCategory: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const color = req.body.color;
+
+      await WorkoutModel.updateWorkoutCategory({
         color,
         userId,
       });
 
-      const workoutSetsId = await WorkoutModel.createWorkoutSet({ userId });
+      res.status(201).json({ message: 'Successfully category updated' });
+      return;
+    } catch (e) {
+      res.status(500).send({ e });
+    }
+  },
+
+  // /api/workout/
+  createWorkoutItem: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const category = req.body.category;
+      const name = req.body.name;
 
       const workoutItemId = await WorkoutModel.createWorkoutItem({
+        userId,
+        category,
         name,
-        workoutCategoryId,
       });
 
-      const resultWorkoutSetItem = await WorkoutModel.createWorkoutSetItem({
-        workoutItemId,
-        workoutSetsId,
-      });
+      if (workoutItemId === 0) {
+        res.status(200).json({ message: 'The workout item already exists' });
+        return;
+      }
+      await WorkoutModel.createWorkoutSet({ userId });
 
-      res.status(201).json({ resultWorkoutSetItem });
+      // const resultWorkoutSetItem =
+      //   await WorkoutModel.createOriginalWorkoutSetItem({
+      //     workoutItemId,
+      //     workoutSetsId,
+      //   });
+
+      res.status(201).json({ message: 'Successfully workout item created' });
       return;
     } catch (e) {
       res.status(500).send({ e });

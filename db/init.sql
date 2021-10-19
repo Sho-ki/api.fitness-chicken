@@ -1,7 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS `workout_app_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
--- -----------------------------------------------------
--- Schema workout_app_backend
--- -----------------------------------------------------
+
 CREATE SCHEMA IF NOT EXISTS `workout_app_db` DEFAULT CHARACTER SET utf8mb4 ;
 USE `workout_app_db` ;
 
@@ -18,9 +16,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `workout_app_db`.`workout_sets`
--- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `workout_app_db`.`workout_sets` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `day_of_week` ENUM('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat') NULL DEFAULT NULL,
@@ -38,9 +34,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `workout_app_db`.`workout_categories`
--- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `workout_app_db`.`workout_categories` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `category` ENUM('Warm Up', 'Arms', 'Legs', 'Chest', 'Abs', 'Glutes', 'Back', 'Shoulders', 'Upper Body', 'Lower Body') NULL DEFAULT NULL,
@@ -59,9 +53,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `workout_app_db`.`workout_items`
--- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `workout_app_db`.`workout_items` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `workout_item` VARCHAR(64) NOT NULL,
@@ -86,9 +78,7 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
--- -----------------------------------------------------
--- Table `workout_app_db`.`workout_set_items`
--- -----------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS `workout_app_db`.`workout_set_items` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `set_order` INT NOT NULL,

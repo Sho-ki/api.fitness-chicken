@@ -25,6 +25,32 @@ const LoginModel = {
     }
   },
 
+  createWorkoutCategory: async ({ userId }) => {
+    try {
+      await util.promisify(connection.query).bind(connection)(
+        `INSERT INTO workout_categories (category,users_id) VALUES
+        (?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId});`,
+        [
+          'Warm Up',
+          'Arms',
+          'Legs',
+          'Chest',
+          'Abs',
+          'Glutes',
+          'Back',
+          'Shoulders',
+          'Upper Body',
+          'Lower Body',
+          null,
+        ]
+      );
+
+      return;
+    } catch (e) {
+      throw new Error(e);
+    }
+  },
+
   signIn: async (email, password) => {
     try {
       const resultFindEmail = await util

@@ -122,38 +122,25 @@ const WorkoutModel = {
   //     throw new Error(e);
   //   }
   // },
-  createWorkoutCategory: async ({ category, color, userId }) => {
+  updateWorkoutCategory: async ({ color, userId }) => {
     try {
-      // insert data if there is no record of the category, else do nothing
-      let getCategory = await util.promisify(connection.query).bind(connection)(
-        `SELECT * FROM workout_app_db.workout_categories WHERE users_id = ? and category = ?;`,
-        [userId, category]
+      await util.promisify(connection.query).bind(connection)(
+        `UPDATE workout_categories SET color = 
+            CASE category
+              WHEN 'Warm Up' THEN '${color.WarmUp}'
+              WHEN 'Arms' THEN '${color.Arms}' 
+              WHEN 'Legs' THEN '${color.Legs}' 
+              WHEN 'Chest' THEN '${color.Chest}'
+              WHEN 'Abs' THEN '${color.Abs}' 
+              WHEN 'Glutes' THEN '${color.Glutes}' 
+              WHEN 'Back' THEN '${color.Back}'
+              WHEN 'Shoulders' THEN '${color.Shoulders}' 
+              WHEN 'Upper Body' THEN '${color.UpperBody}'
+              WHEN 'Lower Body' THEN '${color.LowerBody}'
+            END
+          WHERE users_id IN (${userId}) and category IN ('Warm Up','Arms','Legs','Chest','Abs','Glutes','Back','Shoulders','Upper Body','Lower Body');`
       );
-      let isRecordExists = getCategory.length > 0;
-
-      let recordId;
-      // if there is a record of the category, update the record
-      if (isRecordExists) {
-        recordId = getCategory[0].id;
-        let existColor = color || getCategory[0].color;
-
-        await util.promisify(connection.query).bind(connection)(
-          `UPDATE workout_categories SET color=?  WHERE users_id = ? and category =?;`,
-          [existColor, userId, category]
-        );
-
-        // insert record if there is no record of the category
-      } else {
-        let colorSelected = color || 'gray';
-        const insert = await util.promisify(connection.query).bind(connection)(
-          `INSERT INTO workout_categories (category, color, users_id) VALUES(?, ?, ?);`,
-          [category, colorSelected, userId]
-        );
-
-        recordId = insert.insertId;
-      }
-
-      return recordId;
+      return;
     } catch (e) {
       throw new Error(e);
     }
@@ -161,23 +148,28 @@ const WorkoutModel = {
 
   createWorkoutSet: async ({ userId }) => {
     try {
-      const resultCreateWorkoutSet = await util
-        .promisify(connection.query)
-        .bind(connection)(`INSERT INTO workout_sets (users_id) VALUES(?);`, [
-        userId,
-      ]);
-      return resultCreateWorkoutSet.insertId;
+      await util.promisify(connection.query).bind(connection)(
+        `INSERT INTO workout_sets (users_id) VALUES(?);`,
+        [userId]
+      );
+      return;
     } catch (e) {
       throw new Error(e);
     }
   },
-  createWorkoutItem: async ({ name, workoutCategoryId }) => {
+  createWorkoutItem: async ({ userId, category, name }) => {
     try {
+      const categoryId = await util
+        .promisify(connection.query)
+        .bind(connection)(
+        `SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category=?`,
+        [userId, category]
+      );
       const resultCreateWorkoutItem = await util
         .promisify(connection.query)
         .bind(connection)(
-        `INSERT INTO workout_items (workout_item,workout_categories_id) VALUES(?,?);`,
-        [name, workoutCategoryId]
+        `INSERT INTO workout_items (workout_item, workout_categories_id)SELECT * FROM (SELECT ?,?)as tmp WHERE NOT EXISTS (SELECT * FROM workout_items WHERE workout_categories_id=? and workout_item=?);`,
+        [name, categoryId[0].id, categoryId[0].id, name]
       );
 
       return resultCreateWorkoutItem.insertId;
@@ -186,7 +178,7 @@ const WorkoutModel = {
     }
   },
 
-  createWorkoutSetItem: async ({ workoutItemId, workoutSetsId }) => {
+  createOriginalWorkoutSetItem: async ({ workoutItemId, workoutSetsId }) => {
     try {
       const resultCreateWorkoutSetItem = await util
         .promisify(connection.query)
@@ -197,7 +189,6 @@ const WorkoutModel = {
 
       return resultCreateWorkoutSetItem;
     } catch (e) {
-      console.log(e);
       throw new Error(e);
     }
   },
