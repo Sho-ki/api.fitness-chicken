@@ -23,9 +23,14 @@ router.post('/signUp', loginController.signUp);
 
 router.post('/signIn', loginController.signIn);
 
-router.post('/api/workouts', workoutController.createWorkout);
+router.post('/api/original-workouts', workoutController.createOriginalWorkout);
 
-router.put('/api/workouts/:workoutId', workoutController.updateWorkout);
+router.post(
+  '/api/dragdrop-workouts/:workoutSetItemId',
+  workoutController.dragdropWorkout
+);
+
+// router.post('/api/workouts', workoutController.createWorkout);
 
 router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
 

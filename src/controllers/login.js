@@ -7,6 +7,7 @@ module.exports = {
       const password = req.body.password;
 
       await LoginModel.signUp(email, password);
+
       res.status(201).json({ message: 'Successfully created' });
     } catch (e) {
       res.status(500).json({ message: e.message });
