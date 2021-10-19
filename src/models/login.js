@@ -14,14 +14,40 @@ const LoginModel = {
 
       const resultSignUp = await util
         .promisify(connection.query)
-        .bind(connection)(`INSERT INTO user (email, password) VALUES (?,?)`, [
+        .bind(connection)(`INSERT INTO users (email, password) VALUES (?,?)`, [
         email,
         hashed_password,
       ]);
 
-      return resultSignUp;
+      return resultSignUp.insertId;
     } catch (e) {
       throw new Error(String(e.code));
+    }
+  },
+
+  createWorkoutCategory: async ({ userId }) => {
+    try {
+      await util.promisify(connection.query).bind(connection)(
+        `INSERT INTO workout_categories (category,users_id) VALUES
+        (?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId});`,
+        [
+          'Warm Up',
+          'Arms',
+          'Legs',
+          'Chest',
+          'Abs',
+          'Glutes',
+          'Back',
+          'Shoulders',
+          'Upper Body',
+          'Lower Body',
+          null,
+        ]
+      );
+
+      return;
+    } catch (e) {
+      throw new Error(e);
     }
   },
 
@@ -29,7 +55,7 @@ const LoginModel = {
     try {
       const resultFindEmail = await util
         .promisify(connection.query)
-        .bind(connection)(`SELECT * FROM user WHERE email = (?)`, [email]);
+        .bind(connection)(`SELECT * FROM users WHERE email = (?)`, [email]);
       if (resultFindEmail.length <= 0) {
         throw new Error();
       }

@@ -1,4 +1,5 @@
 const LoginModel = require('../models/login');
+const WorkoutModel = require('../models/workout');
 
 module.exports = {
   signUp: async (req, res) => {
@@ -6,7 +7,10 @@ module.exports = {
       const email = req.body.email;
       const password = req.body.password;
 
-      await LoginModel.signUp(email, password);
+      const userId = await LoginModel.signUp(email, password);
+
+      await LoginModel.createWorkoutCategory({ userId });
+
       res.status(201).json({ message: 'Successfully created' });
     } catch (e) {
       res.status(500).json({ message: e.message });
