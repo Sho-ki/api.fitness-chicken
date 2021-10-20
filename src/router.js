@@ -23,14 +23,11 @@ router.post('/signUp', loginController.signUp);
 
 router.post('/signIn', loginController.signIn);
 
-router.put('/api/category/:userId', workoutController.updateWorkoutCategory);
+router.put('/api/categories/:userId', workoutController.updateWorkoutCategory);
 
-router.post('/api/workouts/:userId', workoutController.createWorkoutItem);
+router.post('/api/workout-items/:userId', workoutController.createWorkoutItem);
 
-router.post(
-  '/api/dragdrop-workouts/:workoutSetItemId',
-  workoutController.dragdropWorkout
-);
+router.put('/api/workout-set/:workoutSetId', workoutController.saveWorkoutSet);
 
 // router.post('/api/workouts', workoutController.createWorkout);
 

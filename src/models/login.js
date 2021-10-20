@@ -51,6 +51,20 @@ const LoginModel = {
     }
   },
 
+  createWorkoutSet: async ({ userId }) => {
+    try {
+      await util.promisify(connection.query).bind(connection)(
+        `INSERT INTO workout_sets (day_of_week,users_id) VALUES
+        (?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId})`,
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      );
+
+      return;
+    } catch (e) {
+      throw new Error(e);
+    }
+  },
+
   signIn: async (email, password) => {
     try {
       const resultFindEmail = await util
