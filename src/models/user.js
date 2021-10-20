@@ -7,10 +7,11 @@ const UserModel = {
       const getUserScheduleInfo = await util
         .promisify(connection.query)
         .bind(connection)(
-        `SELECT workout_sets.user_workouts_user_id as userId, user_workouts_id ,workout_sets.training_name, workout_sets.sets, workout_sets.times, workout_sets.order_index, workout_categories.label, user_workouts.scheduled_day FROM workout_app_backend.workout_sets 
-        LEFT JOIN workout_categories ON workout_categories.id=workout_categories_id 
-        LEFT JOIN user_workouts ON user_workouts.id = user_workouts_id 
-        WHERE workout_sets.user_workouts_user_id = ${id};`
+        `SELECT ws.*, wsi.set_order, wsi.reps, wsi.sets, wi.workout_item, wc.category, wc.color FROM workout_sets as ws 
+        LEFT JOIN workout_set_items as wsi ON wsi.workout_sets_id = ws.id 
+        LEFT JOIN workout_items as wi ON wi.id = wsi.workout_items_id 
+        LEFT JOIN workout_categories as wc ON wc.id = wi.workout_categories_id 
+        WHERE ws.users_id = ${id}`
       );
 
       return getUserScheduleInfo;
