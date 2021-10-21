@@ -70,4 +70,30 @@ module.exports = {
       res.status(500).send({ e });
     }
   },
+
+  updateWorkoutItem: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const workoutItemId = req.params.workoutItemId;
+      const category = req.body.category;
+      const name = req.body.name;
+
+      const isValidUpdate = await WorkoutModel.updateWorkoutItem({
+        userId,
+        workoutItemId,
+        category,
+        name,
+      });
+
+      if (!isValidUpdate) {
+        res.status(200).json({ message: 'The workout item already exists' });
+        return;
+      }
+
+      res.status(201).json({ message: 'Successfully workout item updated' });
+      return;
+    } catch (e) {
+      res.status(500).send({ e });
+    }
+  },
 };

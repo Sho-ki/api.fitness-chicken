@@ -140,6 +140,32 @@ const WorkoutModel = {
       throw new Error(e);
     }
   },
+
+  updateWorkoutItem: async ({ userId, workoutItemId, category, name }) => {
+    try {
+      const checkIfExists = await util
+        .promisify(connection.query)
+        .bind(connection)(
+        `SELECT * FROM workout_items as wi LEFT JOIN workout_categories as wc on wc.id = wi.workout_categories_id WHERE workout_item = ? and category=?
+      `,
+        [name, category]
+      );
+
+      if (checkIfExists.length > 0) {
+        return false;
+      }
+
+      await util.promisify(connection.query).bind(connection)(
+        `UPDATE workout_items SET workout_item = ?,  workout_categories_id=(SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category = ?) WHERE id = ?
+      `,
+        [name, userId, category, workoutItemId]
+      );
+
+      return true;
+    } catch (e) {
+      throw new Error(e);
+    }
+  },
 };
 
 module.exports = WorkoutModel;

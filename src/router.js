@@ -27,7 +27,12 @@ router.put('/api/categories/:userId', workoutController.updateWorkoutCategory);
 
 router.post('/api/workout-items/:userId', workoutController.createWorkoutItem);
 
-router.put('/api/workout-set/:workoutSetId', workoutController.saveWorkoutSet);
+router.put(
+  '/api/workout-items/:userId/:workoutItemId',
+  workoutController.updateWorkoutItem
+);
+
+router.put('/api/workout-sets/:workoutSetId', workoutController.saveWorkoutSet);
 
 // router.post('/api/workouts', workoutController.createWorkout);
 
