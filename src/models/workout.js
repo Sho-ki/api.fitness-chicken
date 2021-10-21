@@ -49,7 +49,9 @@ const WorkoutModel = {
       const resultCreateWorkoutItem = await util
         .promisify(connection.query)
         .bind(connection)(
-        `INSERT INTO workout_items (workout_item, workout_categories_id)SELECT * FROM (SELECT ?,?)as tmp WHERE NOT EXISTS (SELECT * FROM workout_items WHERE workout_categories_id=? and workout_item=?);`,
+        `INSERT INTO workout_items (workout_item, workout_categories_id)
+          SELECT * FROM (SELECT ?,?)as tmp 
+          WHERE NOT EXISTS (SELECT * FROM workout_items WHERE workout_categories_id=? and workout_item=?);`,
         [name, categoryId[0].id, categoryId[0].id, name]
       );
 
@@ -89,9 +91,8 @@ const WorkoutModel = {
     }
   },
 
-  createNewItems: async ({ workoutItemIdArray, workoutSetId }) => {
+  createSetItems: async ({ workoutItemIdArray, workoutSetId }) => {
     try {
-      let createdSetItemIdArray = [];
       let queryVal = [];
       workoutItemIdArray.map((item) => {
         if (item.id === null) {
@@ -100,12 +101,12 @@ const WorkoutModel = {
       });
 
       queryVal.join(',');
-      const createNewSetItems = await util
+      const createSetItems = await util
         .promisify(connection.query)
         .bind(connection)(
         `INSERT INTO workout_set_items (workout_items_id, workout_sets_id) VALUES ${queryVal}`
       );
-      let firstInsertedId = createNewSetItems.insertId;
+      let firstInsertedId = createSetItems.insertId;
       let j = 0;
       for (let item of workoutItemIdArray) {
         if (item.id === null) {
@@ -146,17 +147,21 @@ const WorkoutModel = {
       const checkIfExists = await util
         .promisify(connection.query)
         .bind(connection)(
-        `SELECT * FROM workout_items as wi LEFT JOIN workout_categories as wc on wc.id = wi.workout_categories_id WHERE workout_item = ? and category=?
+        `SELECT * FROM workout_items as wi 
+            LEFT JOIN workout_categories as wc on wc.id = wi.workout_categories_id 
+            WHERE workout_item = ? and category=?
       `,
         [name, category]
       );
-
       if (checkIfExists.length > 0) {
         return false;
       }
 
       await util.promisify(connection.query).bind(connection)(
-        `UPDATE workout_items SET workout_item = ?,  workout_categories_id=(SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category = ?) WHERE id = ?
+        `UPDATE workout_items 
+            SET workout_item = ?,  
+                workout_categories_id=(SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category = ?) 
+            WHERE id = ?
       `,
         [name, userId, category, workoutItemId]
       );

@@ -45,7 +45,7 @@ module.exports = {
     }
   },
 
-  // /api/workout-set/:workoutSetId
+  // /api/workout-sets/:workoutSetId
   saveWorkoutSet: async (req, res) => {
     try {
       const workoutSetId = req.params.workoutSetId;
@@ -55,7 +55,7 @@ module.exports = {
       // { "id": null, "workoutItemId": 12, "order": 4 }
       const workoutItemIdArray = req.body.workoutItemIdArray;
 
-      let newItemSetArray = await WorkoutModel.createNewItems({
+      let newItemSetArray = await WorkoutModel.createSetItems({
         workoutItemIdArray,
         workoutSetId,
       });
