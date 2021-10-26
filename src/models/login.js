@@ -1,4 +1,3 @@
-const util = require('util');
 const bcrypt = require('bcrypt');
 const connection = require('../db');
 const supabasejs = require('@supabase/supabase-js');
@@ -46,7 +45,6 @@ const LoginModel = {
         { category: 'Shoulders', users_id: userId },
         { category: 'Upper Body', users_id: userId },
         { category: 'Lower Body', users_id: userId },
-        { category: null, users_id: userId },
       ]);
 
       supabaseErrorCheck(error);

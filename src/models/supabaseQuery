@@ -2,7 +2,7 @@
 SELECT wi.*, wc.category, wc.color, wc.users_id  
     FROM workout_items as wi 
     LEFT JOIN workout_categories as wc 
-    ON wc.id = wi.workout_categories_id
+    ON wc.id = wi.workout_categories_id;
 
 
 -- get_user_info
@@ -13,4 +13,4 @@ SELECT ws.*, wsi.set_order, wsi.reps, wsi.sets, wi.workout_item, wc.category, wc
     LEFT JOIN workout_items as wi 
         ON wi.id = wsi.workout_items_id 
     LEFT JOIN workout_categories as wc 
-        ON wc.id = wi.workout_categories_id 
+        ON wc.id = wi.workout_categories_id;
