@@ -34,26 +34,11 @@ router.put(
 
 router.put('/api/workout-sets/:workoutSetId', workoutController.saveWorkoutSet);
 
-// router.post('/api/workouts', workoutController.createWorkout);
-
 router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
 
-// router.get("/quiz-api/:id", controller.getQuiz);
-
-// router.put("/quiz-api/:id", controller.updateQuiz);
-
-// router.delete("/quiz-api/:id", controller.deleteQuiz);
-
-// router.get("/active-quiz-api", controller.listActiveQuizes);
-
-// router.post("/candidate-api", controller.createCandidate);
-
-// router.post("/candidate-answer-api", controller.createCandidateAnswer);
-
-// router.get("/candidate-api", controller.listCandidates);
-
-// router.delete("/candidate-api/:id", controller.deleteCandidate);
-
-// router.get("/candidate-api/:id", controller.getCandidate);
+router.delete(
+  '/api/workouts/:workoutItemId',
+  workoutController.deletewWorkoutItem
+);
 
 module.exports = router;

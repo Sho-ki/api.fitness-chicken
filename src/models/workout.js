@@ -217,6 +217,19 @@ const WorkoutModel = {
       throw e;
     }
   },
+
+  deleteWorkoutItem: async ({ workoutItemId }) => {
+    try {
+      let { error } = await supabase
+        .from('workout_items')
+        .delete()
+        .match({ id: workoutItemId });
+      supabaseErrorCheck(error);
+      return;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 module.exports = WorkoutModel;

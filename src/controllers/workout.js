@@ -100,4 +100,14 @@ module.exports = {
       res.status(500).send({ message: e });
     }
   },
+
+  deletewWorkoutItem: async (req, res) => {
+    const workoutItemId = req.params.workoutItemId;
+    try {
+      await WorkoutModel.deleteWorkoutItem({ workoutItemId });
+      res.status(201).json({ message: 'Successfuly the workout item deleted' });
+    } catch (e) {
+      res.status(500).send({ message: e });
+    }
+  },
 };
