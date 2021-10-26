@@ -1,74 +1,97 @@
-const util = require('util');
 const bcrypt = require('bcrypt');
 const connection = require('../db');
+const supabasejs = require('@supabase/supabase-js');
 
-const hashPass = (password) => {
+const supabase = supabasejs.createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
+function supabaseErrorCheck(error) {
+  if (error) throw error.message;
+}
+
+function hashPass(password) {
   if (!password) return null;
   return bcrypt.hashSync(password, 10);
-};
+}
 
 const LoginModel = {
   signUp: async (email, password) => {
     try {
       const hashed_password = hashPass(password);
 
-      const resultSignUp = await util
-        .promisify(connection.query)
-        .bind(connection)(`INSERT INTO users (email, password) VALUES (?,?)`, [
-        email,
-        hashed_password,
-      ]);
+      let { data, error } = await supabase
+        .from('users')
+        .insert([{ email, password: hashed_password }]);
+      supabaseErrorCheck(error);
 
-      return resultSignUp.insertId;
+      return data[0].id;
     } catch (e) {
-      throw new Error(String(e.code));
+      throw e;
     }
   },
 
   createWorkoutCategory: async ({ userId }) => {
     try {
-      await util.promisify(connection.query).bind(connection)(
-        `INSERT INTO workout_categories (category,users_id) VALUES
-        (?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId}),(?, ${userId});`,
-        [
-          'Warm Up',
-          'Arms',
-          'Legs',
-          'Chest',
-          'Abs',
-          'Glutes',
-          'Back',
-          'Shoulders',
-          'Upper Body',
-          'Lower Body',
-          null,
-        ]
-      );
+      const { error } = await supabase.from('workout_categories').insert([
+        { category: 'Warm Up', users_id: userId },
+        { category: 'Arms', users_id: userId },
+        { category: 'Legs', users_id: userId },
+        { category: 'Chest', users_id: userId },
+        { category: 'Abs', users_id: userId },
+        { category: 'Glutes', users_id: userId },
+        { category: 'Back', users_id: userId },
+        { category: 'Shoulders', users_id: userId },
+        { category: 'Upper Body', users_id: userId },
+        { category: 'Lower Body', users_id: userId },
+      ]);
+
+      supabaseErrorCheck(error);
 
       return;
     } catch (e) {
-      throw new Error(e);
+      throw e;
+    }
+  },
+
+  createWorkoutSet: async ({ userId }) => {
+    try {
+      const { error } = await supabase.from('workout_sets').insert([
+        { day_of_week: 'Sun', users_id: userId },
+        { day_of_week: 'Mon', users_id: userId },
+        { day_of_week: 'Tue', users_id: userId },
+        { day_of_week: 'Wed', users_id: userId },
+        { day_of_week: 'Thu', users_id: userId },
+        { day_of_week: 'Fri', users_id: userId },
+        { day_of_week: 'Sat', users_id: userId },
+      ]);
+
+      supabaseErrorCheck(error);
+
+      return;
+    } catch (e) {
+      throw e;
     }
   },
 
   signIn: async (email, password) => {
     try {
-      const resultFindEmail = await util
-        .promisify(connection.query)
-        .bind(connection)(`SELECT * FROM users WHERE email = (?)`, [email]);
-      if (resultFindEmail.length <= 0) {
+      const { data, error } = await supabase
+        .from('users')
+        .select()
+        .match({ email });
+
+      if (data.length <= 0) {
         throw new Error();
       }
 
-      const isValidPass = await bcrypt.compare(
-        password,
-        resultFindEmail[0].password
-      );
+      const isValidPass = await bcrypt.compare(password, data[0].password);
       if (!isValidPass) {
         throw new Error();
       }
 
-      return { id: resultFindEmail[0].id };
+      return { id: data[0].id };
     } catch (e) {
       throw new Error(e);
     }

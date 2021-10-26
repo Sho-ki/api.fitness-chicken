@@ -23,35 +23,22 @@ router.post('/signUp', loginController.signUp);
 
 router.post('/signIn', loginController.signIn);
 
-router.put('/api/category/:userId', workoutController.updateWorkoutCategory);
+router.put('/api/categories/:userId', workoutController.updateWorkoutCategory);
 
-router.post('/api/workouts/:userId', workoutController.createWorkoutItem);
+router.post('/api/workout-items/:userId', workoutController.createWorkoutItem);
 
-router.post(
-  '/api/dragdrop-workouts/:workoutSetItemId',
-  workoutController.dragdropWorkout
+router.put(
+  '/api/workout-items/:userId/:workoutItemId',
+  workoutController.updateWorkoutItem
 );
 
-// router.post('/api/workouts', workoutController.createWorkout);
+router.put('/api/workout-sets/:workoutSetId', workoutController.saveWorkoutSet);
 
 router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
 
-// router.get("/quiz-api/:id", controller.getQuiz);
-
-// router.put("/quiz-api/:id", controller.updateQuiz);
-
-// router.delete("/quiz-api/:id", controller.deleteQuiz);
-
-// router.get("/active-quiz-api", controller.listActiveQuizes);
-
-// router.post("/candidate-api", controller.createCandidate);
-
-// router.post("/candidate-answer-api", controller.createCandidateAnswer);
-
-// router.get("/candidate-api", controller.listCandidates);
-
-// router.delete("/candidate-api/:id", controller.deleteCandidate);
-
-// router.get("/candidate-api/:id", controller.getCandidate);
+router.delete(
+  '/api/workouts/:workoutItemId',
+  workoutController.deletewWorkoutItem
+);
 
 module.exports = router;

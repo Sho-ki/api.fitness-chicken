@@ -11,9 +11,11 @@ module.exports = {
 
       await LoginModel.createWorkoutCategory({ userId });
 
+      await LoginModel.createWorkoutSet({ userId });
+
       res.status(201).json({ message: 'Successfully created' });
     } catch (e) {
-      res.status(500).json({ message: e.message });
+      res.status(500).json({ message: e });
     }
   },
 

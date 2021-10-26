@@ -11,14 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^1.24.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
-    "mysql2": "^2.3.0",
-    "supertest": "^6.1.6",
-    "util": "^0.12.4"
+    "supertest": "^6.1.6"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
