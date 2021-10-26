@@ -8,7 +8,6 @@ const supabase = supabasejs.createClient(
 );
 
 function supabaseErrorCheck(error) {
-  console.log(error);
   if (error) throw error.message;
 }
 
@@ -22,72 +21,70 @@ const WorkoutModel = {
 
       supabaseErrorCheck(error);
 
-      let { data: data2, error: error2 } = await supabase
-        .from('workout_categories')
-        .upsert([
-          {
-            users_id: userId,
-            id: data[0].id,
-            color: color.WarmUp,
-            category: 'Warm Up',
-          },
-          {
-            users_id: userId,
-            id: data[1].id,
-            color: color.Arms,
-            category: 'Arms',
-          },
-          {
-            users_id: userId,
-            id: data[2].id,
-            color: color.Legs,
-            category: 'Legs',
-          },
-          {
-            users_id: userId,
-            id: data[3].id,
-            color: color.Chest,
-            category: 'Chest',
-          },
-          {
-            users_id: userId,
-            id: data[4].id,
-            color: color.Abs,
-            category: 'Abs',
-          },
-          {
-            users_id: userId,
-            id: data[5].id,
-            color: color.Glutes,
-            category: 'Glutes',
-          },
-          {
-            users_id: userId,
-            id: data[6].id,
-            color: color.Back,
-            category: 'Back',
-          },
-          {
-            users_id: userId,
-            id: data[7].id,
-            color: color.Shoulders,
-            category: 'Shoulders',
-          },
-          {
-            users_id: userId,
-            id: data[8].id,
-            color: color.UpperBody,
-            category: 'Upper Body',
-          },
-          {
-            users_id: userId,
-            id: data[9].id,
-            color: color.LowerBody,
-            category: 'Lower Body',
-          },
-        ]);
+      let { error: error2 } = await supabase.from('workout_categories').upsert([
+        {
+          users_id: userId,
+          id: data[0].id,
+          color: color.WarmUp,
+          category: 'Warm Up',
+        },
+        {
+          users_id: userId,
+          id: data[1].id,
+          color: color.Arms,
+          category: 'Arms',
+        },
+        {
+          users_id: userId,
+          id: data[2].id,
+          color: color.Legs,
+          category: 'Legs',
+        },
+        {
+          users_id: userId,
+          id: data[3].id,
+          color: color.Chest,
+          category: 'Chest',
+        },
+        {
+          users_id: userId,
+          id: data[4].id,
+          color: color.Abs,
+          category: 'Abs',
+        },
+        {
+          users_id: userId,
+          id: data[5].id,
+          color: color.Glutes,
+          category: 'Glutes',
+        },
+        {
+          users_id: userId,
+          id: data[6].id,
+          color: color.Back,
+          category: 'Back',
+        },
+        {
+          users_id: userId,
+          id: data[7].id,
+          color: color.Shoulders,
+          category: 'Shoulders',
+        },
+        {
+          users_id: userId,
+          id: data[8].id,
+          color: color.UpperBody,
+          category: 'Upper Body',
+        },
+        {
+          users_id: userId,
+          id: data[9].id,
+          color: color.LowerBody,
+          category: 'Lower Body',
+        },
+      ]);
 
-      supabaseErrorCheck(error);
+      supabaseErrorCheck(error2);
 
       return;
     } catch (e) {

@@ -9,7 +9,6 @@ const supabase = supabasejs.createClient(
 );
 
 function supabaseErrorCheck(error) {
-  console.log(error);
   if (error) throw error.message;
 }
 
