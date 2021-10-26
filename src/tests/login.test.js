@@ -14,9 +14,24 @@ const password = 'jest1';
 
 const signUpData = [
   [email, password, 201, 'Successfully created'],
-  [email, password, 500, 'ER_DUP_ENTRY'],
-  [email, null, 500, 'ER_BAD_NULL_ERROR'],
-  [null, password, 500, 'ER_BAD_NULL_ERROR'],
+  [
+    email,
+    password,
+    500,
+    'duplicate key value violates unique constraint "email_unique"',
+  ],
+  [
+    email,
+    null,
+    500,
+    'null value in column "password" of relation "users" violates not-null constraint',
+  ],
+  [
+    null,
+    password,
+    500,
+    'null value in column "email" of relation "users" violates not-null constraint',
+  ],
 ];
 const signInData = [
   [email, password, 200, 'Sign in successfully'],

@@ -16,7 +16,7 @@ module.exports = {
       res.status(201).json({ message: 'Successfully category updated' });
       return;
     } catch (e) {
-      res.status(500).send({ e });
+      res.status(500).send({ message: e });
     }
   },
 
@@ -41,7 +41,7 @@ module.exports = {
       res.status(201).json({ message: 'Successfully workout item created' });
       return;
     } catch (e) {
-      res.status(500).send({ e });
+      res.status(500).send({ message: e });
     }
   },
 
@@ -49,28 +49,32 @@ module.exports = {
   saveWorkoutSet: async (req, res) => {
     try {
       const workoutSetId = req.params.workoutSetId;
-      // = { "id": null, "workoutItemId": 12, "order": 1 },
-      // { "id": 43, "workoutItemId": 13, "order": 2 },
-      // { "id": null, "workoutItemId": 13, "order": 3 },
-      // { "id": null, "workoutItemId": 12, "order": 4 }
+      // = { "id": null, "workoutItemId": 12, "order": 1, reps:10, sets:2 },
+      // { "id": 43, "workoutItemId": 13, "order": 2 , reps:10, sets:2},
+      // { "id": null, "workoutItemId": 13, "order": 3 , reps:10, sets:2},
+      // { "id": null, "workoutItemId": 12, "order": 4 , reps:10, sets:2}
       const workoutItemIdArray = req.body.workoutItemIdArray;
+      const deleteIdList = req.body.deleteIdList;
 
-      let newItemSetArray = await WorkoutModel.createSetItems({
+      if (deleteIdList.length > 0) {
+        await WorkoutModel.deleteSetItems({
+          deleteIdList,
+        });
+      }
+
+      await WorkoutModel.updateSetItems({
         workoutItemIdArray,
         workoutSetId,
-      });
-
-      await WorkoutModel.updateOrder({
-        newItemSetArray,
       });
 
       res.status(200).json({ message: 'Successfully save the change' });
       return;
     } catch (e) {
-      res.status(500).send({ e });
+      res.status(500).send({ message: e });
     }
   },
 
+  // /api/workout-items/:userId
   updateWorkoutItem: async (req, res) => {
     try {
       const userId = req.params.userId;
@@ -93,7 +97,7 @@ module.exports = {
       res.status(201).json({ message: 'Successfully workout item updated' });
       return;
     } catch (e) {
-      res.status(500).send({ e });
+      res.status(500).send({ message: e });
     }
   },
 };

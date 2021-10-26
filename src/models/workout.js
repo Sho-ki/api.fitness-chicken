@@ -1,174 +1,220 @@
 const util = require('util');
 const connection = require('../db');
+const supabasejs = require('@supabase/supabase-js');
+
+const supabase = supabasejs.createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
+function supabaseErrorCheck(error) {
+  console.log(error);
+  if (error) throw error.message;
+}
 
 const WorkoutModel = {
   updateWorkoutCategory: async ({ color, userId }) => {
     try {
-      await util.promisify(connection.query).bind(connection)(
-        `UPDATE workout_categories SET color = 
-            CASE category
-              WHEN 'Warm Up' THEN '${color.WarmUp}'
-              WHEN 'Arms' THEN '${color.Arms}' 
-              WHEN 'Legs' THEN '${color.Legs}' 
-              WHEN 'Chest' THEN '${color.Chest}'
-              WHEN 'Abs' THEN '${color.Abs}' 
-              WHEN 'Glutes' THEN '${color.Glutes}' 
-              WHEN 'Back' THEN '${color.Back}'
-              WHEN 'Shoulders' THEN '${color.Shoulders}' 
-              WHEN 'Upper Body' THEN '${color.UpperBody}'
-              WHEN 'Lower Body' THEN '${color.LowerBody}'
-            END
-          WHERE users_id IN (${userId}) and category IN ('Warm Up','Arms','Legs','Chest','Abs','Glutes','Back','Shoulders','Upper Body','Lower Body');`
-      );
+      let { data, error } = await supabase
+        .from('workout_categories')
+        .select()
+        .match({ users_id: userId });
+
+      supabaseErrorCheck(error);
+
+      let { data: data2, error: error2 } = await supabase
+        .from('workout_categories')
+        .upsert([
+          {
+            users_id: userId,
+            id: data[0].id,
+            color: color.WarmUp,
+            category: 'Warm Up',
+          },
+          {
+            users_id: userId,
+            id: data[1].id,
+            color: color.Arms,
+            category: 'Arms',
+          },
+          {
+            users_id: userId,
+            id: data[2].id,
+            color: color.Legs,
+            category: 'Legs',
+          },
+          {
+            users_id: userId,
+            id: data[3].id,
+            color: color.Chest,
+            category: 'Chest',
+          },
+          {
+            users_id: userId,
+            id: data[4].id,
+            color: color.Abs,
+            category: 'Abs',
+          },
+          {
+            users_id: userId,
+            id: data[5].id,
+            color: color.Glutes,
+            category: 'Glutes',
+          },
+          {
+            users_id: userId,
+            id: data[6].id,
+            color: color.Back,
+            category: 'Back',
+          },
+          {
+            users_id: userId,
+            id: data[7].id,
+            color: color.Shoulders,
+            category: 'Shoulders',
+          },
+          {
+            users_id: userId,
+            id: data[8].id,
+            color: color.UpperBody,
+            category: 'Upper Body',
+          },
+          {
+            users_id: userId,
+            id: data[9].id,
+            color: color.LowerBody,
+            category: 'Lower Body',
+          },
+        ]);
+
+      supabaseErrorCheck(error);
+
       return;
     } catch (e) {
-      throw new Error(e);
+      throw e;
     }
   },
 
   createWorkoutSet: async ({ userId }) => {
     try {
-      await util.promisify(connection.query).bind(connection)(
-        `INSERT INTO workout_sets (users_id) VALUES(?);`,
-        [userId]
-      );
+      let { error } = await supabase
+        .from('workout_sets')
+        .insert({ users_id: userId });
+
+      supabaseErrorCheck(error);
       return;
     } catch (e) {
-      throw new Error(e);
+      throw e;
     }
   },
 
   createWorkoutItem: async ({ userId, category, name }) => {
     try {
-      const categoryId = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category=?`,
-        [userId, category]
-      );
-      const resultCreateWorkoutItem = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `INSERT INTO workout_items (workout_item, workout_categories_id)
-          SELECT * FROM (SELECT ?,?)as tmp 
-          WHERE NOT EXISTS (SELECT * FROM workout_items WHERE workout_categories_id=? and workout_item=?);`,
-        [name, categoryId[0].id, categoryId[0].id, name]
-      );
+      let { data, error } = await supabase
+        .from('workout_categories')
+        .select()
+        .match({ users_id: userId, category });
+      supabaseErrorCheck(error);
 
-      return resultCreateWorkoutItem.insertId;
-    } catch (e) {
-      throw new Error(e);
-    }
-  },
+      let { data: data2, error: error2 } = await supabase
+        .from('workout_items')
+        .select()
+        .match({ workout_categories_id: data[0].id, workout_item: name });
+      supabaseErrorCheck(error2);
 
-  createOriginalWorkoutSetItem: async ({ workoutItemId, workoutSetsId }) => {
-    try {
-      const resultCreateWorkoutSetItem = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `INSERT INTO workout_set_items (workout_items_id, workout_sets_id) VALUES(?,?)`,
-        [workoutItemId, workoutSetsId]
-      );
+      if (data2.length === 0) {
+        const { data: data3, error: error3 } = await supabase
+          .from('workout_items')
+          .insert({ workout_categories_id: data[0].id, workout_item: name });
 
-      return resultCreateWorkoutSetItem;
-    } catch (e) {
-      throw new Error(e);
-    }
-  },
-
-  createWorkoutSetCopy: async ({ dayOfWeek, userId }) => {
-    try {
-      const resultCreateWorkoutSetCopy = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `INSERT INTO workout_sets (day_of_week, users_id) VALUES(?,?)`,
-        [dayOfWeek, userId]
-      );
-
-      return resultCreateWorkoutSetCopy.insertId;
-    } catch (e) {
-      throw new Error(e);
-    }
-  },
-
-  createSetItems: async ({ workoutItemIdArray, workoutSetId }) => {
-    try {
-      let queryVal = [];
-      workoutItemIdArray.map((item) => {
-        if (item.id === null) {
-          queryVal.push(`(${item.workoutItemId}, ${workoutSetId})`);
-        }
-      });
-
-      queryVal.join(',');
-      const createSetItems = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `INSERT INTO workout_set_items (workout_items_id, workout_sets_id) VALUES ${queryVal}`
-      );
-      let firstInsertedId = createSetItems.insertId;
-      let j = 0;
-      for (let item of workoutItemIdArray) {
-        if (item.id === null) {
-          item.id = firstInsertedId + j;
-          j++;
-        }
+        supabaseErrorCheck(error3);
+        return data3[0].id;
       }
-
-      return workoutItemIdArray;
+      return 0;
     } catch (e) {
-      throw new Error(e);
+      throw e;
     }
   },
-  updateOrder: async ({ newItemSetArray }) => {
+
+  updateSetItems: async ({ workoutItemIdArray, workoutSetId }) => {
     try {
-      let queryVal = '';
-      let whereVal = [];
-      newItemSetArray.map((item) => {
-        queryVal += ` WHEN ${item.id} THEN ${item.order} `;
-        whereVal.push(item.id);
+      let queryValForNew = [];
+      workoutItemIdArray.map(async (item) => {
+        if (item.id == null) {
+          let val = {
+            workout_items_id: item.workoutItemId,
+            workout_sets_id: Number(workoutSetId),
+            set_order: item.order,
+            reps: item.reps,
+            sets: item.sets,
+          };
+          queryValForNew.push(val);
+        } else {
+          let { error } = await supabase
+            .from('workout_set_items')
+            .update({ set_order: item.order, reps: item.reps, sets: item.sets })
+            .match({ id: item.id });
+
+          supabaseErrorCheck(error);
+        }
       });
 
-      await util.promisify(connection.query).bind(connection)(
-        `UPDATE workout_set_items SET set_order = 
-          CASE id
-            ${queryVal}
-          END
-          WHERE id in (${whereVal.join(',')})`
-      );
+      if (queryValForNew.length > 0) {
+        let { error: error2 } = await supabase
+          .from('workout_set_items')
+          .insert(queryValForNew);
+        supabaseErrorCheck(error2);
+      }
       return;
     } catch (e) {
-      throw new Error(e);
+      throw e;
+    }
+  },
+
+  deleteSetItems: async ({ deleteIdList }) => {
+    try {
+      for (let i = 0; i < deleteIdList.length; i++) {
+        let { error } = await supabase
+          .from('workout_set_items')
+          .delete()
+          .match({ id: deleteIdList[i] });
+        supabaseErrorCheck(error);
+      }
+      return;
+    } catch (e) {
+      throw e;
     }
   },
 
   updateWorkoutItem: async ({ userId, workoutItemId, category, name }) => {
     try {
-      const checkIfExists = await util
-        .promisify(connection.query)
-        .bind(connection)(
-        `SELECT * FROM workout_items as wi 
-            LEFT JOIN workout_categories as wc on wc.id = wi.workout_categories_id 
-            WHERE workout_item = ? and category=?
-      `,
-        [name, category]
-      );
-      if (checkIfExists.length > 0) {
+      let { data, error } = await supabase
+        .from('get_workout_items')
+        .select()
+        .match({ workout_item: name, users_id: userId });
+      supabaseErrorCheck(error);
+      if (data.length > 0) {
         return false;
       }
 
-      await util.promisify(connection.query).bind(connection)(
-        `UPDATE workout_items 
-            SET workout_item = ?,  
-                workout_categories_id=(SELECT workout_categories.id FROM workout_categories WHERE users_id=? and category = ?) 
-            WHERE id = ?
-      `,
-        [name, userId, category, workoutItemId]
-      );
+      let { data: getUserCategoryId, error: error2 } = await supabase
+        .from('workout_categories')
+        .select()
+        .match({ users_id: userId, category });
+      supabaseErrorCheck(error2);
+
+      let { error: error3 } = await supabase
+        .from('workout_items')
+        .update({
+          workout_item: name,
+          workout_categories_id: getUserCategoryId.data[0].id,
+        })
+        .match({ id: workoutItemId });
+      supabaseErrorCheck(error3);
 
       return true;
     } catch (e) {
-      throw new Error(e);
+      throw e;
     }
   },
 };
