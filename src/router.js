@@ -25,22 +25,16 @@ router.post('/signIn', loginController.signIn);
 
 router.put('/api/categories/:userId', workoutController.updateWorkoutCategory);
 
+router.get('/api/workout-items/:userId', workoutController.getWorkoutItem);
+
 router.post('/api/workout-items/:userId', workoutController.createWorkoutItem);
 
-router.put(
-  '/api/workout-items/:userId/:workoutItemId',
-  workoutController.updateWorkoutItem
-);
+router.put('/api/workout-items/:userId/:workoutItemId', workoutController.updateWorkoutItem);
+
+router.delete('/api/workout-items/:workoutItemId', workoutController.deletewWorkoutItem);
 
 router.put('/api/workout-sets/:workoutSetId', workoutController.saveWorkoutSet);
 
 router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
-
-router.get('/api/workout-items/:userId', workoutController.getWorkoutItem);
-
-router.delete(
-  '/api/workouts/:workoutItemId',
-  workoutController.deletewWorkoutItem
-);
 
 module.exports = router;
