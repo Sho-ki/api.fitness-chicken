@@ -36,6 +36,8 @@ router.put('/api/workout-sets/:workoutSetId', workoutController.saveWorkoutSet);
 
 router.get('/api/workouts/:userId', userController.getUserScheduleInfo);
 
+router.get('/api/workout-items/:userId', workoutController.getWorkoutItem);
+
 router.delete(
   '/api/workouts/:workoutItemId',
   workoutController.deletewWorkoutItem

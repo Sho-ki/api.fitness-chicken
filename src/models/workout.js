@@ -226,6 +226,19 @@ const WorkoutModel = {
       throw e;
     }
   },
+
+  getUserWorkoutItems: async ({ userId }) => {
+    try {
+      let { data, error } = await supabase
+        .from('get_workout_items')
+        .select()
+        .match({ users_id: userId });
+      supabaseErrorCheck(error);
+      return data;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 module.exports = WorkoutModel;
