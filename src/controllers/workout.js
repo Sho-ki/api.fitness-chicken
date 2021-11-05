@@ -27,6 +27,10 @@ module.exports = {
       const category = req.body.category;
       const name = req.body.name;
 
+      if (!category || !name) {
+        res.status(200).json({ message: 'Please fill out the blank' });
+        return;
+      }
       const workoutItemId = await WorkoutModel.createWorkoutItem({
         userId,
         category,
@@ -106,6 +110,16 @@ module.exports = {
     try {
       await WorkoutModel.deleteWorkoutItem({ workoutItemId });
       res.status(201).json({ message: 'Successfuly the workout item deleted' });
+    } catch (e) {
+      res.status(500).send({ message: e });
+    }
+  },
+
+  getWorkoutItem: async (req, res) => {
+    const userId = req.params.userId;
+    try {
+      const data = await WorkoutModel.getUserWorkoutItems({ userId });
+      res.status(201).json(data);
     } catch (e) {
       res.status(500).send({ message: e });
     }
