@@ -78,7 +78,7 @@ module.exports = {
     }
   },
 
-  // /api/workout-items/:userId
+  // /api/workout-items/:userId/:workoutItemId
   updateWorkoutItem: async (req, res) => {
     try {
       const userId = req.params.userId;

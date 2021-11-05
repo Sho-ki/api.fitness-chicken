@@ -1,10 +1,7 @@
 const connection = require('../db');
 const supabasejs = require('@supabase/supabase-js');
 
-const supabase = supabasejs.createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabase = supabasejs.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 function supabaseErrorCheck(error) {
   if (error) throw error.message;
@@ -13,10 +10,7 @@ function supabaseErrorCheck(error) {
 const WorkoutModel = {
   updateWorkoutCategory: async ({ color, userId }) => {
     try {
-      let { data, error } = await supabase
-        .from('workout_categories')
-        .select()
-        .match({ users_id: userId });
+      let { data, error } = await supabase.from('workout_categories').select().match({ users_id: userId });
 
       supabaseErrorCheck(error);
 
@@ -93,9 +87,7 @@ const WorkoutModel = {
 
   createWorkoutSet: async ({ userId }) => {
     try {
-      let { error } = await supabase
-        .from('workout_sets')
-        .insert({ users_id: userId });
+      let { error } = await supabase.from('workout_sets').insert({ users_id: userId });
 
       supabaseErrorCheck(error);
       return;
@@ -156,9 +148,7 @@ const WorkoutModel = {
       });
 
       if (queryValForNew.length > 0) {
-        let { error: error2 } = await supabase
-          .from('workout_set_items')
-          .insert(queryValForNew);
+        let { error: error2 } = await supabase.from('workout_set_items').insert(queryValForNew);
         supabaseErrorCheck(error2);
       }
       return;
@@ -170,10 +160,7 @@ const WorkoutModel = {
   deleteSetItems: async ({ deleteIdList }) => {
     try {
       for (let i = 0; i < deleteIdList.length; i++) {
-        let { error } = await supabase
-          .from('workout_set_items')
-          .delete()
-          .match({ id: deleteIdList[i] });
+        let { error } = await supabase.from('workout_set_items').delete().match({ id: deleteIdList[i] });
         supabaseErrorCheck(error);
       }
       return;
@@ -203,7 +190,7 @@ const WorkoutModel = {
         .from('workout_items')
         .update({
           workout_item: name,
-          workout_categories_id: getUserCategoryId.data[0].id,
+          workout_categories_id: getUserCategoryId[0].id,
         })
         .match({ id: workoutItemId });
       supabaseErrorCheck(error3);
@@ -216,10 +203,7 @@ const WorkoutModel = {
 
   deleteWorkoutItem: async ({ workoutItemId }) => {
     try {
-      let { error } = await supabase
-        .from('workout_items')
-        .delete()
-        .match({ id: workoutItemId });
+      let { error } = await supabase.from('workout_items').delete().match({ id: workoutItemId });
       supabaseErrorCheck(error);
       return;
     } catch (e) {
@@ -229,10 +213,7 @@ const WorkoutModel = {
 
   getUserWorkoutItems: async ({ userId }) => {
     try {
-      let { data, error } = await supabase
-        .from('get_workout_items')
-        .select()
-        .match({ users_id: userId });
+      let { data, error } = await supabase.from('get_workout_items').select().match({ users_id: userId });
       supabaseErrorCheck(error);
       return data;
     } catch (e) {
