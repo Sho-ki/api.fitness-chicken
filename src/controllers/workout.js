@@ -28,7 +28,7 @@ module.exports = {
       const name = req.body.name;
 
       if (!category || !name) {
-        res.status(200).json({ message: 'Please fill out the blank' });
+        res.status(200).json({ message: 'Please fill out the field' });
         return;
       }
       const workoutItemId = await WorkoutModel.createWorkoutItem({
@@ -37,7 +37,7 @@ module.exports = {
         name,
       });
 
-      if (workoutItemId === 0) {
+      if (!workoutItemId) {
         res.status(200).json({ message: 'The workout item already exists' });
         return;
       }
@@ -78,7 +78,7 @@ module.exports = {
     }
   },
 
-  // /api/workout-items/:userId
+  // /api/workout-items/:userId/:workoutItemId
   updateWorkoutItem: async (req, res) => {
     try {
       const userId = req.params.userId;
