@@ -102,6 +102,7 @@ const WorkoutModel = {
         .from('workout_categories')
         .select()
         .match({ users_id: userId, category });
+
       supabaseErrorCheck(error);
 
       let { data: data2, error: error2 } = await supabase
@@ -118,7 +119,7 @@ const WorkoutModel = {
         supabaseErrorCheck(error3);
         return data3[0].id;
       }
-      return 0;
+      return false;
     } catch (e) {
       throw e;
     }
@@ -174,7 +175,7 @@ const WorkoutModel = {
       let { data, error } = await supabase
         .from('get_workout_items')
         .select()
-        .match({ workout_item: name, users_id: userId });
+        .match({ workout_item: name, users_id: userId, category });
       supabaseErrorCheck(error);
       if (data.length > 0) {
         return false;
