@@ -124,4 +124,14 @@ module.exports = {
       res.status(500).send({ message: e });
     }
   },
+
+  getWorkoutCategory: async (req, res) => {
+    const userId = req.params.userId;
+    try {
+      const data = await WorkoutModel.getWorkoutCategory({ userId });
+      res.status(201).json(data);
+    } catch (e) {
+      res.status(500).send({ message: e });
+    }
+  },
 };

@@ -17,6 +17,7 @@ router.use(cors());
 // HTTP Methods
 router.post('/signUp', loginController.signUp);
 router.post('/signIn', loginController.signIn);
+router.get('/api/categories/:userId', workoutController.getWorkoutCategory);
 router.put('/api/categories/:userId', workoutController.updateWorkoutCategory);
 router.get('/api/workout-items/:userId', workoutController.getWorkoutItem);
 router.post('/api/workout-items/:userId', workoutController.createWorkoutItem);

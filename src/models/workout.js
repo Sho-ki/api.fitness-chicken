@@ -221,6 +221,16 @@ const WorkoutModel = {
       throw e;
     }
   },
+
+  getWorkoutCategory: async ({ userId }) => {
+    try {
+      let { data, error } = await supabase.from('workout_categories').select().match({ users_id: userId });
+      supabaseErrorCheck(error);
+      return data;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 module.exports = WorkoutModel;
