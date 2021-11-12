@@ -26,7 +26,7 @@ module.exports = {
 
       const result = await LoginModel.signIn(email, password);
 
-      res.status(200).json({ message: 'Sign in successfully', result });
+      res.status(200).json({ message: 'Sign in successfully', id: result.id });
     } catch (e) {
       res.status(500).send({ message: 'Wrong email or password' });
     }
