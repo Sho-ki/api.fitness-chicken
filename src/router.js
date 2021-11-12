@@ -4,6 +4,12 @@ const loginController = require('./controllers/login');
 const workoutController = require('./controllers/workout');
 const userController = require('./controllers/user');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const sessions = require('express-session');
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
 
 const router = express.Router();
 router.use(
@@ -12,7 +18,25 @@ router.use(
   })
 );
 router.use(bodyParser.json());
-router.use(cors());
+router.use(
+  cors({
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+);
+
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(
+  sessions({
+    secret: 'thisismysecrctekeyfhrgfgrfrty84fwir767',
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false,
+  })
+);
+
+// parsing the incoming data
 
 // HTTP Methods
 router.post('/signUp', loginController.signUp);

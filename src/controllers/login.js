@@ -25,6 +25,10 @@ module.exports = {
       const password = req.body.password;
 
       const result = await LoginModel.signIn(email, password);
+      console.log(result);
+      // req.session.user = result;
+      // console.log(req.session);
+      res.cookie('id', result.id);
 
       res.status(200).json({ message: 'Sign in successfully', result });
     } catch (e) {

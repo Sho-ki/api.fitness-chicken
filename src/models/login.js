@@ -2,10 +2,7 @@ const bcrypt = require('bcrypt');
 const connection = require('../db');
 const supabasejs = require('@supabase/supabase-js');
 
-const supabase = supabasejs.createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabase = supabasejs.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 function supabaseErrorCheck(error) {
   if (error) throw error.message;
@@ -21,9 +18,7 @@ const LoginModel = {
     try {
       const hashed_password = hashPass(password);
 
-      let { data, error } = await supabase
-        .from('users')
-        .insert([{ email, password: hashed_password }]);
+      let { data, error } = await supabase.from('users').insert([{ email, password: hashed_password }]);
       supabaseErrorCheck(error);
 
       return data[0].id;
@@ -77,10 +72,7 @@ const LoginModel = {
 
   signIn: async (email, password) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select()
-        .match({ email });
+      const { data, error } = await supabase.from('users').select().match({ email });
 
       if (data.length <= 0) {
         throw new Error();
@@ -91,7 +83,7 @@ const LoginModel = {
         throw new Error();
       }
 
-      return { id: data[0].id };
+      return { id: data[0].id, data };
     } catch (e) {
       throw new Error(e);
     }
