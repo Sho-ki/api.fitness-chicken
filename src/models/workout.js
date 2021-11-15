@@ -204,9 +204,10 @@ const WorkoutModel = {
 
   deleteWorkoutItem: async ({ workoutItemId }) => {
     try {
-      let { error } = await supabase.from('workout_items').delete().match({ id: workoutItemId });
+      let { data, error } = await supabase.from('workout_items').delete().match({ id: workoutItemId });
+
       supabaseErrorCheck(error);
-      return;
+      return data[0].id;
     } catch (e) {
       throw e;
     }

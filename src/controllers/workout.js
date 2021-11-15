@@ -108,8 +108,9 @@ module.exports = {
   deletewWorkoutItem: async (req, res) => {
     const workoutItemId = req.params.workoutItemId;
     try {
-      await WorkoutModel.deleteWorkoutItem({ workoutItemId });
-      res.status(201).json({ message: 'Successfuly the workout item deleted' });
+      const id = await WorkoutModel.deleteWorkoutItem({ workoutItemId });
+
+      res.status(200).json({ message: 'Successfuly the workout item deleted', id });
     } catch (e) {
       res.status(500).send({ message: e });
     }
