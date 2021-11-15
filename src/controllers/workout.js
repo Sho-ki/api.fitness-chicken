@@ -52,12 +52,12 @@ module.exports = {
   // /api/workout-sets/:workoutSetId
   saveWorkoutSet: async (req, res) => {
     try {
-      const workoutSetId = req.params.workoutSetId;
+      const userId = req.params.userId;
       // = { "id": null, "workoutItemId": 12, "order": 1, reps:10, sets:2 },
       // { "id": 43, "workoutItemId": 13, "order": 2 , reps:10, sets:2},
       // { "id": null, "workoutItemId": 13, "order": 3 , reps:10, sets:2},
       // { "id": null, "workoutItemId": 12, "order": 4 , reps:10, sets:2}
-      const workoutItemIdArray = req.body.workoutItemIdArray;
+      const workoutItemArray = req.body.workoutItemArray;
       const deleteIdList = req.body.deleteIdList;
 
       if (deleteIdList.length > 0) {
@@ -67,8 +67,8 @@ module.exports = {
       }
 
       await WorkoutModel.updateSetItems({
-        workoutItemIdArray,
-        workoutSetId,
+        workoutItemArray,
+        userId,
       });
 
       res.status(200).json({ message: 'Successfully save the change' });

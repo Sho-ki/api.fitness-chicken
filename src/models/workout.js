@@ -125,27 +125,35 @@ const WorkoutModel = {
     }
   },
 
-  updateSetItems: async ({ workoutItemIdArray, workoutSetId }) => {
+  updateSetItems: async ({ workoutItemArray, userId }) => {
     try {
-      let queryValForNew = [];
-      workoutItemIdArray.map(async (item) => {
-        if (item.id == null) {
-          let val = {
-            workout_items_id: item.workoutItemId,
-            workout_sets_id: Number(workoutSetId),
-            set_order: item.order,
-            reps: item.reps,
-            sets: item.sets,
-          };
-          queryValForNew.push(val);
-        } else {
-          let { error } = await supabase
-            .from('workout_set_items')
-            .update({ set_order: item.order, reps: item.reps, sets: item.sets })
-            .match({ id: item.id });
+      let { data: daysIdSet } = await supabase.from('workout_sets').select().match({ users_id: userId });
 
-          supabaseErrorCheck(error);
-        }
+      let queryValForNew = [];
+      workoutItemArray.map(async (dayItems, i) => {
+        let filteredDayItems = dayItems.filter((setItem) => {
+          return setItem.workout_item !== null;
+        });
+
+        filteredDayItems.map(async (item, j) => {
+          if (item.id == null) {
+            let val = {
+              workout_items_id: item.workout_item_id,
+              workout_sets_id: daysIdSet[i].id,
+              set_order: j,
+              reps: item.reps,
+              sets: item.sets,
+            };
+            queryValForNew.push(val);
+          } else {
+            let { error } = await supabase
+              .from('workout_set_items')
+              .update({ set_order: j, reps: item.reps, sets: item.sets })
+              .match({ id: item.id });
+
+            supabaseErrorCheck(error);
+          }
+        });
       });
 
       if (queryValForNew.length > 0) {
