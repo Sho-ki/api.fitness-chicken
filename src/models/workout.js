@@ -129,7 +129,7 @@ const WorkoutModel = {
     try {
       let { data: daysIdSet } = await supabase.from('workout_sets').select().match({ users_id: userId });
 
-      let newQuery = [];
+      let query = [];
       workoutItemSets.map(async (workoutItemSet, dayIdx) => {
         workoutItemSet.map(async (item, orderIdx) => {
           if (item.workout_item !== null) {
@@ -141,7 +141,7 @@ const WorkoutModel = {
                 reps: item.reps,
                 sets: item.sets,
               };
-              newQuery.push(val);
+              query.push(val);
             } else {
               let { error } = await supabase
                 .from('workout_set_items')
@@ -154,8 +154,8 @@ const WorkoutModel = {
         });
       });
 
-      if (newQuery.length > 0) {
-        let { error: error2 } = await supabase.from('workout_set_items').insert(newQuery);
+      if (query.length > 0) {
+        let { error: error2 } = await supabase.from('workout_set_items').insert(query);
         supabaseErrorCheck(error2);
       }
       return;
