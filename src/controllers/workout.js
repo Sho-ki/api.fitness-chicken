@@ -1,4 +1,5 @@
 const connection = require('../db');
+const UserModel = require('../models/user');
 const WorkoutModel = require('../models/workout');
 
 module.exports = {
@@ -67,7 +68,9 @@ module.exports = {
         userId,
       });
 
-      res.status(200).json({ message: 'Successfully save the change' });
+      const userData = await UserModel.getUserScheduleInfo(userId);
+
+      res.status(200).json({ message: 'Successfully save the change', userData });
       return;
     } catch (e) {
       res.status(500).send({ message: e });
