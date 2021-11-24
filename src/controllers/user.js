@@ -4,9 +4,7 @@ module.exports = {
   getUserScheduleInfo: async (req, res) => {
     try {
       const userId = req.params.userId;
-      const resultGetUserScheduleInfo = await UserModel.getUserScheduleInfo(
-        userId
-      );
+      const resultGetUserScheduleInfo = await UserModel.getUserScheduleInfo(userId);
 
       res.status(200).json(resultGetUserScheduleInfo);
     } catch (e) {

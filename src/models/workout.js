@@ -125,31 +125,42 @@ const WorkoutModel = {
     }
   },
 
-  updateSetItems: async ({ workoutItemIdArray, workoutSetId }) => {
+  updateSetItems: async ({ workoutItemSets, userId }) => {
     try {
-      let queryValForNew = [];
-      workoutItemIdArray.map(async (item) => {
-        if (item.id == null) {
-          let val = {
-            workout_items_id: item.workoutItemId,
-            workout_sets_id: Number(workoutSetId),
-            set_order: item.order,
-            reps: item.reps,
-            sets: item.sets,
-          };
-          queryValForNew.push(val);
-        } else {
-          let { error } = await supabase
-            .from('workout_set_items')
-            .update({ set_order: item.order, reps: item.reps, sets: item.sets })
-            .match({ id: item.id });
+      let { data: daysIdSet } = await supabase.from('workout_sets').select().match({ users_id: userId });
 
-          supabaseErrorCheck(error);
+      let query = [];
+      for (let i = 0; i < workoutItemSets.length; i++) {
+        for (let j = 0; j < workoutItemSets[i].length; j++) {
+          const item = workoutItemSets[i][j];
+          if (item.workout_item !== null) {
+            if (item.id === null) {
+              let val = {
+                workout_items_id: item.workout_item_id,
+                workout_sets_id: daysIdSet[i].id,
+                set_order: item.set_order,
+                reps: item.reps,
+                sets: item.sets,
+              };
+              query.push(val);
+            } else {
+              let { error } = await supabase
+                .from('workout_set_items')
+                .update({
+                  set_order: item.set_order,
+                  reps: item.reps,
+                  sets: item.sets,
+                })
+                .match({ id: item.id });
+              supabaseErrorCheck(error);
+            }
+          }
         }
-      });
+      }
 
-      if (queryValForNew.length > 0) {
-        let { error: error2 } = await supabase.from('workout_set_items').insert(queryValForNew);
+      if (query.length > 0) {
+        let { error: error2 } = await supabase.from('workout_set_items').insert(query);
+
         supabaseErrorCheck(error2);
       }
       return;
