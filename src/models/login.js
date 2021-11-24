@@ -2,13 +2,10 @@ const bcrypt = require('bcrypt');
 const connection = require('../db');
 const supabasejs = require('@supabase/supabase-js');
 
-const supabase = supabasejs.createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabase = supabasejs.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 function supabaseErrorCheck(error) {
-  if (error) throw error.message;
+  if (error) return error.message;
 }
 
 function hashPass(password) {
@@ -21,10 +18,9 @@ const LoginModel = {
     try {
       const hashed_password = hashPass(password);
 
-      let { data, error } = await supabase
-        .from('users')
-        .insert([{ email, password: hashed_password }]);
-      supabaseErrorCheck(error);
+      let { data, error } = await supabase.from('users').insert([{ email, password: hashed_password }]);
+      const errorMsg = supabaseErrorCheck(error);
+      if (errorMsg) return;
 
       return data[0].id;
     } catch (e) {
@@ -77,18 +73,16 @@ const LoginModel = {
 
   signIn: async (email, password) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select()
-        .match({ email });
+      const { data, error } = await supabase.from('users').select().match({ email });
+      supabaseErrorCheck(error);
 
       if (data.length <= 0) {
-        throw new Error();
+        return;
       }
 
       const isValidPass = await bcrypt.compare(password, data[0].password);
       if (!isValidPass) {
-        throw new Error();
+        return;
       }
 
       return { id: data[0].id };
