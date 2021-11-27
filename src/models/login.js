@@ -77,12 +77,12 @@ const LoginModel = {
       supabaseErrorCheck(error);
 
       if (data.length <= 0) {
-        return;
+        return null;
       }
 
       const isValidPass = await bcrypt.compare(password, data[0].password);
       if (!isValidPass) {
-        return;
+        return null;
       }
 
       return { id: data[0].id };
